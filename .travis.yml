@@ -1,0 +1,50 @@
+language: generic
+
+install:
+  # Silent install from conda docs
+  # https://conda.io/docs/user-guide/install/macos.html#install-macos-silent
+  # adapted using
+  # https://conda.io/docs/user-guide/tasks/use-conda-with-travis-ci.html
+
+  # Needed to check if conda already installed
+  - export PATH="$HOME/miniconda/bin:$PATH"
+
+  # If not yet installed, obtain Miniconda
+  # and tectonic
+  # From tectonic docs
+  # https://tectonic-typesetting.github.io/en-US/install.html#the-anaconda-method
+  - if ! command -v conda > /dev/null; then
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+      bash miniconda.sh -b -p $HOME/miniconda -u;
+      conda config --add channels conda-forge;
+      conda config --set always_yes yes;
+      conda install tectonic==0.1.11;
+    fi
+  # Install biber if required for compiling the references.
+  # Biber version should match the biblatex version of Tectonic
+  - conda install -c malramsay biber==2.11 --yes
+  - conda info -a
+  # Workaround if a specific bundle is needed
+#  - sudo mkdir -p ~/.config/Tectonic/
+#  - echo "[[default_bundles]]" | sudo tee --append ~/.config/Tectonic/config.toml
+#  - sudo echo "url = \"https://tectonic.newton.cx/bundles/tlextras-2018.1r0/bundle.tar\"" | sudo tee --append ~/.config/Tectonic/config.toml
+cache:
+  directories:
+    - $HOME/miniconda
+    - $HOME/.cache/Tectonic
+script: 
+ # Run tectonic once to generate intermediate files
+ - tectonic --keep-intermediates --reruns 0 ./main.tex
+ # If a bcf file exists run biber to compile references
+ - if [ -f "main.bcf" ]; then biber main; fi
+ # Final run of tectonic to create output
+ - tectonic ./main.tex --print
+
+deploy:
+  provider: releases
+  api_key:
+    secure: DmZcOQGP4k64ozXHTjToBmjoAK4RCA8udhuiKsHgbLocxM9jjrw4V3b5GVarZzywKsuMKMgKPAWukTC1hWy6NC9c+DzFtmZyZBHhhG+7icGhOC1Ghy+JUPvPG7f5fzcFlpxJbCS2vKEB1+NtspG97LoQIaCgyKKINzZw7wSnYV20WsPXsU9VDltY8M5YGJw6TgvSXF8cbPw2K52GYBuSJ4e/AMJ4E2zGMQADmAMk6NVALfSGzkQ5uW/SysrI5v8DHwU+NpTGc4LVf2MnJRqb+QX/WihbGCWRQ4xdVC3mcZ8APvoW4HZnFzNSKAIE5rHX6F52+r924eou+yFqPQn266zrjSWrMTItmoIqNzLx6TVWc7eHtwU7Wv1zvUbRQ0xu+nDA/iGTWRXY+QQTkps41gOwlhOSPOrCsqb8BzSWRBLoIvYZW/8jWPwBrh5fSjIRGzR9rUmvWkab052WXrDh355fnBlPdwMUQvVc9zHFPAmHMK3WJLSHnK6jZBUf5BOD3Ftpf0i68dcEdYxTTLXiTJkuPuEicPM9upthy9y6Fi0E/JstHjb5+G9ak3J8mlFOu6sDd7fv0R533gyP8TTXf/v+NI9Wx2VAs6oQZkc/dgL+rq6RgHin8YLpjh4ql/BEWh+B5l8ZPPzIZc/rxTbcVl7xxeJm+aMT/cEVs2SXaTo=
+  file: main.pdf
+  on:
+    repo: richardli/test-tex-pdf-release
+  skip_cleanup: 'true'
