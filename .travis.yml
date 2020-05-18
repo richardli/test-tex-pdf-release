@@ -42,8 +42,7 @@ script:
 
 deploy:
   provider: releases
-  on:
-    tags: true
+  on.tags: true
   api_key:
     secure: DmZcOQGP4k64ozXHTjToBmjoAK4RCA8udhuiKsHgbLocxM9jjrw4V3b5GVarZzywKsuMKMgKPAWukTC1hWy6NC9c+DzFtmZyZBHhhG+7icGhOC1Ghy+JUPvPG7f5fzcFlpxJbCS2vKEB1+NtspG97LoQIaCgyKKINzZw7wSnYV20WsPXsU9VDltY8M5YGJw6TgvSXF8cbPw2K52GYBuSJ4e/AMJ4E2zGMQADmAMk6NVALfSGzkQ5uW/SysrI5v8DHwU+NpTGc4LVf2MnJRqb+QX/WihbGCWRQ4xdVC3mcZ8APvoW4HZnFzNSKAIE5rHX6F52+r924eou+yFqPQn266zrjSWrMTItmoIqNzLx6TVWc7eHtwU7Wv1zvUbRQ0xu+nDA/iGTWRXY+QQTkps41gOwlhOSPOrCsqb8BzSWRBLoIvYZW/8jWPwBrh5fSjIRGzR9rUmvWkab052WXrDh355fnBlPdwMUQvVc9zHFPAmHMK3WJLSHnK6jZBUf5BOD3Ftpf0i68dcEdYxTTLXiTJkuPuEicPM9upthy9y6Fi0E/JstHjb5+G9ak3J8mlFOu6sDd7fv0R533gyP8TTXf/v+NI9Wx2VAs6oQZkc/dgL+rq6RgHin8YLpjh4ql/BEWh+B5l8ZPPzIZc/rxTbcVl7xxeJm+aMT/cEVs2SXaTo=
   file: main.pdf
